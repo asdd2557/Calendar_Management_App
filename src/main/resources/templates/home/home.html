@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+            color: #fff;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .logout {
+            background: #dc3545;
+        }
+
+        .logout:hover {
+            background: #c82333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        form button {
+            align-self: flex-end;
+        }
+
+        .schedule-list {
+            margin: 2rem 0;
+        }
+
+        .schedule-item {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Schedule Manager</h1>
+    <div>
+        <a href="/login" class="btn">Login</a>
+        <a href="/logout" class="btn logout">Logout</a>
+    </div>
+</header>
+
+<div class="container">
+    <button class="btn" onclick="toggleForm()">Create New Schedule</button>
+
+    <form id="scheduleForm" style="display: none;" onsubmit="addSchedule(event)">
+        <h2>Create Schedule</h2>
+        <input type="text" id="title" placeholder="Schedule Title" required>
+        <textarea id="description" placeholder="Description" rows="4" required></textarea>
+        <input type="datetime-local" id="date" required>
+        <button type="submit" class="btn">Add Schedule</button>
+    </form>
+
+    <div class="schedule-list" id="scheduleList">
+        <h2>Schedules</h2>
+        <!-- Schedule items will be added dynamically -->
+    </div>
+</div>
+
+<script>
+    function toggleForm() {
+        const form = document.getElementById('scheduleForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function addSchedule(event) {
+        event.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const date = document.getElementById('date').value;
+
+        const scheduleList = document.getElementById('scheduleList');
+
+        const scheduleItem = document.createElement('div');
+        scheduleItem.classList.add('schedule-item');
+
+        scheduleItem.innerHTML = `
+                <h3>${title}</h3>
+                <p>${description}</p>
+                <p><strong>Date:</strong> ${new Date(date).toLocaleString()}</p>
+            `;
+
+        scheduleList.appendChild(scheduleItem);
+
+        // Clear form
+        document.getElementById('scheduleForm').reset();
+        toggleForm();
+    }
+</script>
+</body>
+</html>
