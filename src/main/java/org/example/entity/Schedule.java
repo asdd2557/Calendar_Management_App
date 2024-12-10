@@ -1,19 +1,14 @@
 package org.example.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.dto.ScheduleRequestDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Setter
 @Getter
+@Setter
 public class Schedule {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
     private String password;
     private String userName;
@@ -21,15 +16,24 @@ public class Schedule {
     private LocalDateTime startDateTime;
     private LocalDateTime updateDateTime;
 
-    @PrePersist
-    public void prePersist() {
-        this.startDateTime = (this.startDateTime == null) ? LocalDateTime.now().withNano(0) : this.startDateTime;
-        this.updateDateTime = (this.updateDateTime == null) ? LocalDateTime.now().withNano(0) : this.updateDateTime;
+    // 생성자: 기본 시간 설정
+    public Schedule() {
+        this.startDateTime = LocalDateTime.now().withNano(0);
+        this.updateDateTime = LocalDateTime.now().withNano(0);
     }
 
-    @PreUpdate
-    public void preUpdate() {
+    // 생성자 오버로드: 초기 값을 직접 설정
+    public Schedule(Long id, String password, String userName, String description, LocalDateTime startDateTime, LocalDateTime updateDateTime) {
+        this.id = id;
+        this.password = password;
+        this.userName = userName;
+        this.description = description;
+        this.startDateTime = (startDateTime != null) ? startDateTime : LocalDateTime.now().withNano(0);
+        this.updateDateTime = (updateDateTime != null) ? updateDateTime : LocalDateTime.now().withNano(0);
+    }
+
+    // 업데이트 시 시간 갱신 메서드
+    public void updateTimestamps() {
         this.updateDateTime = LocalDateTime.now().withNano(0);
     }
 }
-

@@ -13,16 +13,19 @@ repositories {
 }
 
 dependencies {
-    //My SQL
+    // MySQL
     runtimeOnly("com.mysql:mysql-connector-j")
+
     // Spring Boot Web
-    implementation("org.springframework.boot:spring-boot-starter-web:3.1.4")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")//컨트롤러 작동하게 하는거
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
-    // Spring Boot Data JPA
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.4")
+    // Spring Boot JDBC (Data Access)
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
 
-    // H2 Database
+    // Thymeleaf (컨트롤러 작동)
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    // H2 Database (테스트용)
     runtimeOnly("com.h2database:h2:2.2.224")
 
     // Lombok
@@ -30,12 +33,18 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 
     // Kotlin 기본 의존성
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.10")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // 테스트 라이브러리
-    testImplementation("org.springframework.boot:spring-boot-starter-test:3.1.4")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
 
+dependencyManagement {
+    imports {
+        // Spring Boot 의존성 BOM
+        mavenBom("org.springframework.boot:spring-boot-dependencies:3.1.4")
+    }
 }
 
 tasks.test {
