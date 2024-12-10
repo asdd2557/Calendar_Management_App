@@ -85,7 +85,45 @@ Response:
     }
 ]
 ```
+### **2.4 작성자 이름과 특정 기간 조회**
 
+```
+Method: GET
+URL: /api/books?startDateTime=2024-12-09T12:00:00&endDateTime=2024-12-09T15:00:00&userName=exampleUser
+Description: 작성자 이름과 특정 기간에 해당하는 일정을 조회합니다.
+Query Parameters:
+- startDateTime (string, optional): 조회 시작 날짜/시간. 예: 2024-12-09T12:00:00.
+- endDateTime (string, optional): 조회 종료 날짜/시간. 예: 2024-12-09T15:00:00.
+- userName (string, optional): 조회할 작성자의 이름.
+
+Response:
+[
+    {
+        "id": 1,
+        "userName": "exampleUser",
+        "description": "Meeting with client",
+        "startDateTime": "2024-12-09T12:30:00",
+        "updateDateTime": "2024-12-09T13:00:00"
+    },
+    {
+        "id": 2,
+        "userName": "exampleUser",
+        "description": "Team discussion",
+        "startDateTime": "2024-12-09T13:30:00",
+        "updateDateTime": "2024-12-09T14:00:00"
+    }
+]
+
+Error Handling:
+- 잘못된 날짜 형식 요청 시:
+  {
+      "status": 400,
+      "error": "Bad Request",
+      "message": "Invalid date format: InvalidDate"
+  }
+- 누락된 파라미터 시:
+  - 필터링 없이 전체 데이터 반환.
+```
 ## 3. 일정 수정 (Update Schedule)
 
 ```
