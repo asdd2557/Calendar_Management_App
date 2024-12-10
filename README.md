@@ -127,6 +127,22 @@ Response:
 }
 ```
 
+## ERD (Entity-Relationship Diagram)
+**URL:** https://www.erdcloud.com/d/sKYFNWfiBu76SYhSj
+```
+
++-----------------------------+
+|          Schedule           |
++-----------------------------+
+| id: Long                   |
+| userName: String           |
+| description: String        |
+| password: String           |
+| startDateTime: LocalDateTime |
+| updateDateTime: LocalDateTime |
++-----------------------------+
+```
+
 ## 사용 방법
 
 ```
