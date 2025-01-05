@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.dto.ScheduleDeleteRequestDto;
+import org.example.dto.SchedulePutRequestDTO;
 import org.example.entity.Schedule;
 import org.example.service.ScheduleService;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +38,13 @@ public class ApiController {
     }
 
     @PutMapping("/{id}")
-    public void updateSchedule(@PathVariable Long id, @RequestBody Schedule schedule) {
-        schedule.setUpdateDateTime(LocalDateTime.now().withNano(0));
-        scheduleService.updateSchedule(id, schedule);
+    public void updateSchedule(@PathVariable Long id, @RequestBody SchedulePutRequestDTO requestDTO) {
+        scheduleService.updateSchedule(id, requestDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
+    public void deleteSchedule(@PathVariable Long id, @RequestBody ScheduleDeleteRequestDto requestDto) {
+        scheduleService.deleteSchedule(id, requestDto);
     }
     @DeleteMapping("/all")
     public void deleteAllSchedule(){
