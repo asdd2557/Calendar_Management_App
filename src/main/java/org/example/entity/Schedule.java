@@ -15,24 +15,24 @@ public class Schedule {
     private LocalDateTime startDateTime;
     private LocalDateTime updateDateTime;
 
-    // 생성자: 기본 시간 설정
     public Schedule() {
         this.startDateTime = LocalDateTime.now().withNano(0);
         this.updateDateTime = LocalDateTime.now().withNano(0);
     }
 
-    // 생성자 오버로드: 초기 값을 직접 설정
-    public Schedule(Long id, String password, String userName, String description, LocalDateTime startDateTime, LocalDateTime updateDateTime) {
-        this.id = id;
-        this.password = password;
-        this.userName = userName;
-        this.description = description;
-        this.startDateTime = (startDateTime != null) ? startDateTime : LocalDateTime.now().withNano(0);
-        this.updateDateTime = (updateDateTime != null) ? updateDateTime : LocalDateTime.now().withNano(0);
+    public void update(String contents, String password) {
+        validatePassword(password);
+        this.description = contents;
+        this.updateDateTime = LocalDateTime.now();
     }
 
-    // 업데이트 시 시간 갱신 메서드
-    public void updateTimestamps() {
-        this.updateDateTime = LocalDateTime.now().withNano(0);
+    public void delete(String password) {
+        validatePassword(password);
+    }
+
+    private void validatePassword(String inputPassword) {
+        if (!this.password.equals(inputPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

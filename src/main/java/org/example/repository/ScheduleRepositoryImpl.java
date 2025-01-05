@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ScheduleRepositoryImpl implements ScheduleRepository {
@@ -75,6 +76,16 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
                 updateTime,               // DTO에서 전달받은 수정 시간
                 id                        // ID
         );
+    }
+    @Override
+    public Optional<Schedule> findById(Long id) {
+        String sql = "SELECT * FROM Schedule WHERE id = ?";
+        try {
+            Schedule schedule = jdbcTemplate.queryForObject(sql, new Object[]{id}, new ScheduleRowMapper());
+            return Optional.ofNullable(schedule);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
