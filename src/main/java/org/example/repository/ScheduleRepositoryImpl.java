@@ -61,28 +61,14 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         );
     }
 
-
-
     @Override
     public void update(Long id, SchedulePutRequestDTO requestDTO) {
-        // 비밀번호 확인 쿼리
-        String passwordCheckSql = "SELECT password FROM Schedule WHERE id = ?";
-        String existingPassword;
+        // 비밀번호 확인
+        validatePassword(id, requestDTO.getPassword());
 
-        try {
-            existingPassword = jdbcTemplate.queryForObject(passwordCheckSql, new Object[]{id}, String.class);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("해당 ID에 대한 데이터가 없습니다.");
-        }
-
-        // 입력된 비밀번호와 비교 (null-safe)
-        if (existingPassword == null || !existingPassword.equals(requestDTO.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-
-        // 비밀번호가 일치하면 업데이트 실행
+        // 업데이트 실행
         String updateSql = "UPDATE Schedule SET description = ?, update_date_time = ? WHERE id = ?";
-        LocalDateTime updateTime = LocalDateTime.now();
+        LocalDateTime updateTime =  LocalDateTime.now();
 
         jdbcTemplate.update(updateSql,
                 requestDTO.getContents(), // DTO에서 description 값 추출
@@ -91,10 +77,38 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
         );
     }
 
-
     @Override
     public void deleteById(Long id, ScheduleDeleteRequestDto requestDto) {
-        // 비밀번호 확인 쿼리
+        // 비밀번호 확인
+        validatePassword(id, requestDto.getPassword());
+
+        // 삭제 실행
+        String deleteSql = "DELETE FROM Schedule WHERE id = ?";
+        jdbcTemplate.update(deleteSql, id);
+    }
+
+    public void deleteAll() {
+        String sql = "DELETE FROM Schedule";
+        jdbcTemplate.update(sql);
+    }
+
+    @Override
+    public List<Schedule> findAll() {
+        String sql = "SELECT * FROM Schedule";
+        return jdbcTemplate.query(sql, new ScheduleRowMapper());
+    }
+
+    /**
+     * 비밀번호 확인 메서드
+     *
+     * @param id       대상 ID
+     * @param password 입력된 비밀번호
+     */
+    private void validatePassword(Long id, String password) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalArgumentException("비밀번호는 비어 있을 수 없습니다.");
+        }
+
         String passwordCheckSql = "SELECT password FROM Schedule WHERE id = ?";
         String existingPassword;
 
@@ -104,25 +118,9 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
             throw new IllegalArgumentException("해당 ID에 대한 데이터가 없습니다.");
         }
 
-        // 입력된 비밀번호와 비교
-        if (!existingPassword.equals(requestDto.getPassword())) {
+        if (!existingPassword.equals(password)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-
-        // 비밀번호가 일치하면 삭제 실행
-        String deleteSql = "DELETE FROM Schedule WHERE id = ?";
-        jdbcTemplate.update(deleteSql, id);
-    }
-
-    public void deleteAll(){
-        String sql = "DELETE FROM Schedule";
-        jdbcTemplate.update(sql);
-    }
-
-    @Override
-    public List<Schedule> findAll() {
-        String sql = "SELECT * FROM Schedule";
-        return jdbcTemplate.query(sql, new ScheduleRowMapper());
     }
 
     private static class ScheduleRowMapper implements RowMapper<Schedule> {
